@@ -272,26 +272,33 @@ const searchDogName = (req, res) => {
       });
     }
 
-    doc.age++;
+    lastDogAdded.name = doc.name;
+    lastDogAdded.breed = doc.breed;
+    lastDogAdded.age = doc.age + 1;
+    //    doc.age++;
 
     // send to database - save is a smart update or add
     const savePromise = doc.save();
 
-    savePromise.then(() => {
-      res.json({
-        name: doc.name,
-        breed: doc.breed,
-        age: doc.age,
-      });
-    });
+    savePromise.then(() => res.json({
+      name: lastDogAdded.name,
+      breed: lastDogAdded.breed,
+      age: lastDogAdded.age,
+    }));
 
     savePromise.catch((err1) => {
       res.status(500).json({
         err1,
       });
     }); // end promise catch
-  }); // end nested return above
-}; // end function
+
+    return res.json({
+      name: lastDogAdded.name,
+      breed: lastDogAdded.breed,
+      age: lastDogAdded.age,
+    });
+  }); // end findByName
+}; // end searchDogName function
 
 // notFound handling --
 const notFound = (req, res) => {
