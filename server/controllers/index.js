@@ -17,7 +17,7 @@ const defaultDogData = {
 };
 
 let lastCatAdded = new Cat(defaultCatData);
-let lastDogAdded = new Cat(defaultDogData);
+let lastDogAdded = new Dog(defaultDogData);
 
 // PAGE HOSTING --
 
@@ -272,18 +272,16 @@ const searchDogName = (req, res) => {
       });
     }
 
-    lastDogAdded.name = doc.name;
-    lastDogAdded.breed = doc.breed;
-    lastDogAdded.age = doc.age + 1;
-    //    doc.age++;
+    const updateDog = doc;
+    updateDog.age++;
 
     // send to database - save is a smart update or add
-    const savePromise = doc.save();
+    const savePromise = updateDog.save();
 
     savePromise.then(() => res.json({
-      name: lastDogAdded.name,
-      breed: lastDogAdded.breed,
-      age: lastDogAdded.age,
+      name: updateDog.name,
+      breed: updateDog.breed,
+      age: updateDog.age,
     }));
 
     savePromise.catch((err1) => {
@@ -292,11 +290,7 @@ const searchDogName = (req, res) => {
       });
     }); // end promise catch
 
-    return res.json({
-      name: lastDogAdded.name,
-      breed: lastDogAdded.breed,
-      age: lastDogAdded.age,
-    });
+    return savePromise;
   }); // end findByName
 }; // end searchDogName function
 
